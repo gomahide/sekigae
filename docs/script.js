@@ -4866,7 +4866,41 @@ var Classroom = /** @class */ (function () {
 }());
 exports.Classroom = Classroom;
 
-},{"./shuffle":12,"linq":2}],11:[function(require,module,exports){
+},{"./shuffle":13,"linq":2}],11:[function(require,module,exports){
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var linq_1 = __importDefault(require("linq"));
+//  DOMの書き換え処理をする。
+function setup(document, seed, students, classroom) {
+    var seedView = findElement(document, 'seed');
+    var frontView = findElement(document, 'front');
+    var tableView = findElement(document, 'table');
+    var downloadView = findElement(document, 'download');
+    seedView.innerText = seed.toString();
+    frontView.innerText = linq_1.default.from(students).where(function (s) { return s.front; }).orderBy(function (s) { return s.num; }).toArray().join(', ');
+    tableView.replaceWith(generateTable(document, classroom));
+    downloadView.onclick = function () { downloadCsv(classroom.toCsvString()); };
+}
+exports.setup = setup;
+//  IDで要素を探す。
+function findElement(document, id) {
+    var view = document.getElementById(id);
+    return (view != null) ? view : document.createElement('object');
+}
+//  座席表のtableタグを生成する。
+function generateTable(document, classroom) {
+    var dummy = document.createElement('table');
+    return dummy;
+}
+//  CSV形式でダウンロードさせる。
+function downloadCsv(csvText) {
+    alert("\u5EA7\u5E2D\u8868:\n" + csvText);
+}
+
+},{"linq":2}],12:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -4927,7 +4961,7 @@ function getSpecifiedNums(queryMap) {
             .toArray();
 }
 
-},{"./entities":10,"linq":2,"random-seed":7}],12:[function(require,module,exports){
+},{"./entities":10,"linq":2,"random-seed":7}],13:[function(require,module,exports){
 "use strict";
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
@@ -4983,7 +5017,7 @@ function swap(array, index1, index2) {
     array[index2] = backupOfIndex1;
 }
 
-},{"./entities":10,"linq":2,"random-seed":7}],13:[function(require,module,exports){
+},{"./entities":10,"linq":2,"random-seed":7}],14:[function(require,module,exports){
 "use strict";
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
@@ -4996,21 +5030,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var urlLib = __importStar(require("url"));
 var entities_1 = require("./entities");
 var queries_1 = require("./queries");
+var presentation = __importStar(require("./presentation"));
 window.onload = function () {
-    //  <やること>
-    //  * クエリをパースする。
-    //  * Studentの配列を生成する。
-    //  * 席を配置する。
-    //  * DOMを更新する。
-    //  * 「CSV形式でダウンロード」ボタンのイベントを購読する。
-    alert('これは席替えプログラムです。');
     //  URLのクエリをパースし、シード値と前方の席の希望者を取得する。
     var queryMap = urlLib.parse(location.href, true).query;
     var seed = queries_1.getSeedValue(queryMap);
     var students = queries_1.generateStudents(queryMap);
     //  席替え済みの教室のデータを生成する。
     var classroom = entities_1.Classroom.generate(seed, students);
-    console.log(classroom.toCsvString());
+    //  DOMに反映させる。
+    presentation.setup(document, seed, students, classroom);
 };
 
-},{"./entities":10,"./queries":11,"url":8}]},{},[13]);
+},{"./entities":10,"./presentation":11,"./queries":12,"url":8}]},{},[14]);
