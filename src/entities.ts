@@ -1,4 +1,5 @@
 import * as logic from './shuffle';
+import Enumerable from 'linq';
 
 //  エンティティは基本的にイミュータブルに設計する。
 
@@ -33,7 +34,9 @@ export class Classroom {
 
     //  CSV形式の文字列に変換する。
     public toCsvString(): string {
-        throw new Error("Not implemented.")
+        return Enumerable.from(this.students)
+            .select(column => column.map(s => s.num).join(','))
+            .toArray().join('\n');
     }
 
     //  適切に学生が配置された教室を生成する。
