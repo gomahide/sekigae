@@ -4872,6 +4872,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var entities_1 = require("./entities");
 var linq_1 = __importDefault(require("linq"));
 //  DOMの書き換え処理をする。
 function setup(document, seed, students, classroom) {
@@ -4892,15 +4893,24 @@ function findElement(document, id) {
 }
 //  座席表のtableタグを生成する。
 function generateTable(document, classroom) {
-    var dummy = document.createElement('table');
-    return dummy;
+    var tableView = document.createElement('table');
+    for (var v = 0; v < entities_1.Classroom.verticalSize; v++) {
+        var rowView = tableView.insertRow();
+        for (var h = 0; h < entities_1.Classroom.horizontalSize; h++) {
+            var cellView = rowView.insertCell();
+            var student = classroom.getStudent(v, h);
+            if (student != null)
+                cellView.innerText = student.toString();
+        }
+    }
+    return tableView;
 }
 //  CSV形式でダウンロードさせる。
 function downloadCsv(csvText) {
     alert("\u5EA7\u5E2D\u8868:\n" + csvText);
 }
 
-},{"linq":2}],12:[function(require,module,exports){
+},{"./entities":10,"linq":2}],12:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
