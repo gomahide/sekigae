@@ -18,8 +18,11 @@
   "homepage": "https://github.com/aridai/sekigae#readme",
   "dependencies": {
     "@types/node": "^11.13.7",
+    "@types/random-seed": "^0.3.3",
     "browserify": "^16.2.3",
     "gulp": "^4.0.1",
+    "linq": "^3.2.0",
+    "random-seed": "^0.3.0",
     "ts-node": "^8.1.0",
     "tsify": "^4.0.1",
     "typescript": "^3.4.5",

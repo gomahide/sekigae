@@ -1,4 +1,4 @@
-import * as logic from "./shuffle";
+import * as logic from './shuffle';
 
 //  エンティティは基本的にイミュータブルに設計する。
 
