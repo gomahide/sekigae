@@ -1,0 +1,28 @@
+{
+  "name": "sekigae",
+  "version": "1.0.0",
+  "description": "席替えプログラム",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aridai/sekigae.git"
+  },
+  "author": "aridai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aridai/sekigae/issues"
+  },
+  "homepage": "https://github.com/aridai/sekigae#readme",
+  "dependencies": {
+    "@types/node": "^11.13.7",
+    "browserify": "^16.2.3",
+    "gulp": "^4.0.1",
+    "ts-node": "^8.1.0",
+    "tsify": "^4.0.1",
+    "typescript": "^3.4.5",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}
