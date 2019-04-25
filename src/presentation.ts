@@ -1,5 +1,6 @@
 import { Student, Classroom } from './entities';
 import Enumerable from 'linq';
+import * as localStorage from './localstorage';
 
 //  DOMの書き換え処理をする。
 export function setup(document: Document, seed: number, students: Student[], classroom: Classroom): void {
@@ -11,7 +12,7 @@ export function setup(document: Document, seed: number, students: Student[], cla
     seedView.innerText = seed.toString();
     frontView.innerText = Enumerable.from(students).where(s => s.front).orderBy(s => s.num).toArray().join(', ');
     tableView.replaceWith(generateTable(document, classroom));
-    downloadView.onclick = () => { downloadCsv(classroom.toCsvString()) };
+    downloadView.onclick = () => { localStorage.saveCsv(document, classroom.toCsvString()) };
 }
 
 //  IDで要素を探す。
@@ -30,16 +31,11 @@ function generateTable(document: Document, classroom: Classroom): HTMLTableEleme
         for (let h = 0; h < Classroom.horizontalSize; h++) {
             const cellView = rowView.insertCell();
             const student = classroom.getStudent(v, h);
-            
+
             if (student != null)
                 cellView.innerText = student.toString();
         }
     }
 
     return tableView;
-}
-
-//  CSV形式でダウンロードさせる。
-function downloadCsv(csvText: string): void {
-    alert(`座席表:\n${csvText}`);
 }

@@ -4866,14 +4866,45 @@ var Classroom = /** @class */ (function () {
 }());
 exports.Classroom = Classroom;
 
-},{"./shuffle":13,"linq":2}],11:[function(require,module,exports){
+},{"./shuffle":14,"linq":2}],11:[function(require,module,exports){
+"use strict";
+//  参考: https://blog.mudatobunka.org/entry/2017/04/23/135753
+Object.defineProperty(exports, "__esModule", { value: true });
+//  CSVファイルを保存する。
+function saveCsv(document, csvText) {
+    var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+    var blob = new Blob([bom, csvText], { 'type': 'text/csv' });
+    var url = window.URL;
+    var blobUrl = url.createObjectURL(blob);
+    openSaveFileDialog(document, blobUrl);
+}
+exports.saveCsv = saveCsv;
+//  ファイルの保存するダイアログを開く。
+//  仮想的なaタグを作って、それのクリックイベントを発火させている。
+function openSaveFileDialog(docuent, blobUrl) {
+    var aTag = document.createElement('a');
+    aTag.download = decodeURI('table.csv');
+    aTag.href = blobUrl;
+    aTag.type = 'text/csv';
+    aTag.click();
+}
+
+},{}],12:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var entities_1 = require("./entities");
 var linq_1 = __importDefault(require("linq"));
+var localStorage = __importStar(require("./localstorage"));
 //  DOMの書き換え処理をする。
 function setup(document, seed, students, classroom) {
     var seedView = findElement(document, 'seed');
@@ -4883,7 +4914,7 @@ function setup(document, seed, students, classroom) {
     seedView.innerText = seed.toString();
     frontView.innerText = linq_1.default.from(students).where(function (s) { return s.front; }).orderBy(function (s) { return s.num; }).toArray().join(', ');
     tableView.replaceWith(generateTable(document, classroom));
-    downloadView.onclick = function () { downloadCsv(classroom.toCsvString()); };
+    downloadView.onclick = function () { localStorage.saveCsv(document, classroom.toCsvString()); };
 }
 exports.setup = setup;
 //  IDで要素を探す。
@@ -4905,12 +4936,8 @@ function generateTable(document, classroom) {
     }
     return tableView;
 }
-//  CSV形式でダウンロードさせる。
-function downloadCsv(csvText) {
-    alert("\u5EA7\u5E2D\u8868:\n" + csvText);
-}
 
-},{"./entities":10,"linq":2}],12:[function(require,module,exports){
+},{"./entities":10,"./localstorage":11,"linq":2}],13:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -4971,7 +4998,7 @@ function getSpecifiedNums(queryMap) {
             .toArray();
 }
 
-},{"./entities":10,"linq":2,"random-seed":7}],13:[function(require,module,exports){
+},{"./entities":10,"linq":2,"random-seed":7}],14:[function(require,module,exports){
 "use strict";
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
@@ -5027,7 +5054,7 @@ function swap(array, index1, index2) {
     array[index2] = backupOfIndex1;
 }
 
-},{"./entities":10,"linq":2,"random-seed":7}],14:[function(require,module,exports){
+},{"./entities":10,"linq":2,"random-seed":7}],15:[function(require,module,exports){
 "use strict";
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
@@ -5052,4 +5079,4 @@ window.onload = function () {
     presentation.setup(document, seed, students, classroom);
 };
 
-},{"./entities":10,"./presentation":11,"./queries":12,"url":8}]},{},[14]);
+},{"./entities":10,"./presentation":12,"./queries":13,"url":8}]},{},[15]);
