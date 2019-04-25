@@ -2,8 +2,7 @@
 https://github.com/aridai/sekigae
 
 ## なにこれ?
-石川高専5Iの席替えをするプログラムです。  
-現在開発中です。
+石川高専5Iの席替えをするプログラムです。
 
 ## 使い方
 クエリを渡してあげることでいろいろと指定することができます。  
@@ -19,7 +18,7 @@ https://github.com/aridai/sekigae
 ## 開発について
 言語は **TypeScript** で開発しています。  
 **browserify** + **tsify** で **JavaScript** にトランスパイルして、それをクライアント側で実行しています。  
-席替えプログラムのWebページは **GitHub Pages** で作っています。  
+席替えプログラムのWebページは **GitHub Pages** でホストしています。  
 プロジェクトディレクトリの `docs` 以下がページとして表示されるようになっています。
 
 ### ビルド方法
@@ -27,4 +26,5 @@ https://github.com/aridai/sekigae
 トランスパイルされたスクリプトは `docs/script.js` に出力されます。
 
 ## ライセンス
-//  TODO: 後で書いておく。
+MITライセンスです。  
+詳しくは [こちら](https://github.com/aridai/sekigae/blob/master/LICENSE) を参照してください。
