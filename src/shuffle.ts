@@ -3,12 +3,12 @@ import * as randomLib from 'random-seed'
 import Enumerable from 'linq';
 
 //  制約を考慮しつつ、学生を適当に配置する。
-export function shuffle(seed: number, students: Student[]): Student[][] {
+export function shuffle(seed: string, students: Student[]): Student[][] {
     const hSize = Classroom.horizontalSize;
 
     //  指定したシード値に基づく乱数を生成する。
     //  (再現可能性がある乱数になっているハズ。)
-    const random = randomLib.create(seed.toString());
+    const random = randomLib.create(seed);
     const range = students.length;
 
     //  各座席とランダムな別の座席との入れ替えをしていく。

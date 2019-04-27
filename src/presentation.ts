@@ -3,13 +3,13 @@ import Enumerable from 'linq';
 import * as localStorage from './localstorage';
 
 //  DOMの書き換え処理をする。
-export function setup(document: Document, seed: number, students: Student[], classroom: Classroom): void {
+export function setup(document: Document, seed: string, students: Student[], classroom: Classroom): void {
     const seedView = findElement(document, 'seed');
     const frontView = findElement(document, 'front');
     const tableView = findElement(document, 'table');
     const downloadView = findElement(document, 'download');
 
-    seedView.innerText = seed.toString();
+    seedView.innerText = seed;
     frontView.innerText = Enumerable.from(students).where(s => s.front).orderBy(s => s.num).toArray().join(', ');
     tableView.replaceWith(generateTable(document, classroom));
     downloadView.onclick = () => { localStorage.saveCsv(document, classroom.toCsvString()) };

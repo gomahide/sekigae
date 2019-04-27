@@ -40,7 +40,7 @@ export class Classroom {
     }
 
     //  適切に学生が配置された教室を生成する。
-    public static generate(seed: number, students: Student[]): Classroom {
+    public static generate(seed: string, students: Student[]): Classroom {
         const matrix: Student[][] = logic.shuffle(seed, students);
         return new Classroom(matrix);
     }
