@@ -6,7 +6,7 @@ https://github.com/aridai/sekigae
 
 ## 使い方
 クエリを渡してあげることでいろいろと指定することができます。  
-例: `https://github.io/aridai/sekigae/?seed=114514&mae=3&mae=4`
+例: `https://aridai.github.io/sekigae/?seed=114514&mae=3&mae=4`
 
 | クエリ | 値 |
 |:---:|:---|
