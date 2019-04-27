@@ -4,17 +4,13 @@ import Enumerable from 'linq';
 import * as randomLib from 'random-seed';
 
 //  シードの値を取得する。
-export function getSeedValue(queryMap: ParsedUrlQuery): number {
+export function getSeedValue(queryMap: ParsedUrlQuery): string {
     const rawValue: string | string[] | undefined = queryMap['seed'];
 
-    //  文字列の場合 (クエリに1つだけ指定された場合)
-    if (typeof (rawValue) == 'string') {
-        const parsed = Number.parseInt(rawValue as string)
-        return !Number.isNaN(parsed) ? parsed : generateRand();
-    }
+    if (typeof (rawValue) == 'string' && isNotNullOrWhitespace(rawValue))
+        return rawValue.toString();
 
-    //  それ以外 (複数指定か未指定) ならば、シード値自体もランダムに決めちゃう。
-    else return generateRand();
+    return generateRand().toString();
 }
 
 //  学生の配列を生成する。
@@ -52,4 +48,14 @@ function getSpecifiedNums(queryMap: ParsedUrlQuery): number[] {
         .select(numStr => Number.parseInt(numStr))
         .where(n => !Number.isNaN(n))
         .toArray();
+}
+
+//  文字列がNullや空白文字ではないかを判定する。
+function isNotNullOrWhitespace(str: string | null | undefined): boolean {
+    if (str == null || str == undefined) return false;
+
+    if (typeof (str) == 'string')
+        return str.replace(/\s/g, '').length > 0;
+
+    return false;
 }

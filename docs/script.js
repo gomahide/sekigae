@@ -4911,7 +4911,7 @@ function setup(document, seed, students, classroom) {
     var frontView = findElement(document, 'front');
     var tableView = findElement(document, 'table');
     var downloadView = findElement(document, 'download');
-    seedView.innerText = seed.toString();
+    seedView.innerText = seed;
     frontView.innerText = linq_1.default.from(students).where(function (s) { return s.front; }).orderBy(function (s) { return s.num; }).toArray().join(', ');
     tableView.replaceWith(generateTable(document, classroom));
     downloadView.onclick = function () { localStorage.saveCsv(document, classroom.toCsvString()); };
@@ -4956,14 +4956,9 @@ var randomLib = __importStar(require("random-seed"));
 //  シードの値を取得する。
 function getSeedValue(queryMap) {
     var rawValue = queryMap['seed'];
-    //  文字列の場合 (クエリに1つだけ指定された場合)
-    if (typeof (rawValue) == 'string') {
-        var parsed = Number.parseInt(rawValue);
-        return !Number.isNaN(parsed) ? parsed : generateRand();
-    }
-    //  それ以外 (複数指定か未指定) ならば、シード値自体もランダムに決めちゃう。
-    else
-        return generateRand();
+    if (typeof (rawValue) == 'string' && isNotNullOrWhitespace(rawValue))
+        return rawValue.toString();
+    return generateRand().toString();
 }
 exports.getSeedValue = getSeedValue;
 //  学生の配列を生成する。
@@ -4997,6 +4992,14 @@ function getSpecifiedNums(queryMap) {
             .where(function (n) { return !Number.isNaN(n); })
             .toArray();
 }
+//  文字列がNullや空白文字ではないかを判定する。
+function isNotNullOrWhitespace(str) {
+    if (str == null || str == undefined)
+        return false;
+    if (typeof (str) == 'string')
+        return str.replace(/\s/g, '').length > 0;
+    return false;
+}
 
 },{"./entities":10,"linq":2,"random-seed":7}],14:[function(require,module,exports){
 "use strict";
@@ -5019,7 +5022,7 @@ function shuffle(seed, students) {
     var hSize = entities_1.Classroom.horizontalSize;
     //  指定したシード値に基づく乱数を生成する。
     //  (再現可能性がある乱数になっているハズ。)
-    var random = randomLib.create(seed.toString());
+    var random = randomLib.create(seed);
     var range = students.length;
     //  各座席とランダムな別の座席との入れ替えをしていく。
     for (var i = 0; i < range; i++) {
