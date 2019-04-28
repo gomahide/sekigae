@@ -32,8 +32,19 @@ function generateTable(document: Document, classroom: Classroom): HTMLTableEleme
             const cellView = rowView.insertCell();
             const student = classroom.getStudent(v, h);
 
+            /*
             if (student != null)
                 cellView.innerText = student.toString();
+            */
+
+            //  デバッグ用に前方希望者は赤色で表示させる。
+            if (student != null) {
+                if (student.front) {
+                    cellView.innerHTML = `<span style="color: red;">${student.toString()}</span>`;
+                } else {
+                    cellView.innerText = student.toString();
+                }
+            }
         }
     }
 
