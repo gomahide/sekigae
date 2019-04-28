@@ -6,7 +6,7 @@ https://github.com/aridai/sekigae
 
 ## 使い方
 クエリを渡してあげることでいろいろと指定することができます。  
-例: `https://aridai.github.io/sekigae/?seed=114514&mae=3&mae=4`
+例: `https://aridai.github.io/sekigae/?seed=あそしえいとぷろふぇっさーよしかず&mae=2&mae=4&mae=6&mae=15`
 
 | クエリ | 値 |
 |:---:|:---|
@@ -28,3 +28,7 @@ https://github.com/aridai/sekigae
 ## ライセンス
 MITライセンスです。  
 詳しくは [こちら](https://github.com/aridai/sekigae/blob/master/LICENSE) を参照してください。
+
+あと、いらすとやからイスのイラストを借りてきてましゅ。  
+さんくす!
+https://www.irasutoya.com/2017/06/blog-post_371.html
