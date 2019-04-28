@@ -19,12 +19,14 @@
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="stylesheet" href="./style.css">
     <script src="./script.js"></script>
+    <script src="./hyogo.js"></script>
 </head>
 <body>
+    <!-- きさま!見ているなッ! -->
     <div id="container">
         <p>席替えプログラム<br>(使い方などは<a href="https://github.com/aridai/sekigae">GitHub</a>へどうぞ。)</p>
-        <p>シード値: <span id="seed">1</span></p>
-        <p>前方希望者: <span id="front">1, 2, 3</span></p>
+        <p>シード値: <span id="seed"></span></p>
+        <p>前方希望者: <span id="front"></span></p>
         <p>座席表:</p>
         <div id="table-container">
             <table id="table">
@@ -49,11 +51,6 @@
         </p>
         <p><a id="download" class="material">CSV形式でダウンロード</a></p>
         <p><a id="hyogo-pref-police" class="material">兵庫県警を召喚</a></p>
-        <script>
-            document.getElementById('hyogo-pref-police').onclick = function () {
-                for (;;) alert('🍭(๑•ૅㅁ•๑) < ｱﾒﾁｬﾝﾀﾍﾞﾙ?');
-            }
-        </script>
     </div>
 </body>
 </html>
