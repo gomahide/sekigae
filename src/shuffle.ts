@@ -4,6 +4,7 @@ import Enumerable from 'linq';
 
 //  制約を考慮しつつ、学生を適当に配置する。
 export function shuffle(seed: string, students: Student[]): Student[][] {
+    const vSize = Classroom.verticalSize;
     const hSize = Classroom.horizontalSize;
 
     //  指定したシード値に基づく乱数を生成する。
@@ -17,20 +18,37 @@ export function shuffle(seed: string, students: Student[]): Student[][] {
         swap(students, i, targetIndex);
     }
 
-    //  前の席を希望する人を左前方の座席から順に再配置していく。 (ただし、右端は避ける。)
-    //  この操作を上のループでまとめてやってしまうと配置が偏るためループを分けた。
-    let counter = 0;    //  "前の席" のインデックスを指すカウンタで、希望者を再配置すると増えていく。
-    for (let i = 0; i < range; i++) {
-        const student = students[i];
-        if (student.front) {
-            //  もし右端の席ならばカウンタを1つ進めて、右端に配置されるのを避ける。
-            const isRightEdge = (counter + 1) % hSize == 0;
-            if (isRightEdge) counter++;
+    //  TODO: この実装では、前方希望者が多いときに、最前行の両端を残したまま次の行を候補に入れてしまうため、できればそれを改善する。
+    //  (https://github.com/aridai/sekigae/issues/7#issuecomment-486917080)
 
-            swap(students, i, counter);
-            counter++;
-        }
-    }
+    //  前方希望者とそれらが配置されうる座席のリストを作る。
+    //  希望者数には制限を掛ける。
+    const limit = vSize * (hSize - 2);
+    let frontApplicantIndices = Enumerable.from(students)
+        .select((student, index) => index)
+        .where(index => students[index].front)
+        .take(limit)
+        .toArray();
+
+    const rowCount = Math.ceil(frontApplicantIndices.length / (hSize - 2));
+    let frontSeats = Enumerable.range(0, rowCount * hSize)
+        .where(i => !isLeftEdgeSeat(i, hSize))
+        .where(i => !isRightEdgeSeat(i, hSize))
+        .toArray();
+
+    //  希望者が既に前方にいるならば除外する。
+    frontApplicantIndices = frontApplicantIndices.filter(currentSeatIndex => {
+        const isAlreadyFront = frontSeats.some(frontSeatIndex => frontSeatIndex == currentSeatIndex);
+        if (isAlreadyFront) frontSeats = frontSeats.filter(frontSeatsIndex => frontSeatsIndex != currentSeatIndex);
+        return !isAlreadyFront;
+    });
+
+    //  希望者を入れ替えていく。
+    frontApplicantIndices.forEach(currentSeatIndex => {
+        const destSeatIndex = frontSeats[random(frontSeats.length)];
+        swap(students, currentSeatIndex, destSeatIndex);
+        frontSeats = frontSeats.filter(frontSeatIndex => frontSeatIndex != destSeatIndex);
+    });
 
     //  横方向サイズでワンセットになるように2次元配列に詰める。
     return Enumerable.from(students)
@@ -41,7 +59,22 @@ export function shuffle(seed: string, students: Student[]): Student[][] {
 
 //  配列の要素を入れ替える。
 function swap<T>(array: T[], index1: number, index2: number): void {
-    const backupOfIndex1 = array[index1];
-    array[index1] = array[index2];
-    array[index2] = backupOfIndex1;
+    if ((0 <= index1 && index1 < array.length) && (0 <= index2 && index2 < array.length)) {
+
+        const backupOfIndex1 = array[index1];
+        array[index1] = array[index2];
+        array[index2] = backupOfIndex1;
+    } else {
+        console.log(`OutOfBoundsException: ${array.length}, ${index1}, ${index2}`);
+    }
+}
+
+//  その座席が教室の左端の列にある席かどうかを判定する。
+function isLeftEdgeSeat(index: number, hSize: number): boolean {
+    return index % hSize == 0;
+}
+
+//  その座席が教室の右端の列にある席かどうかを判定する。
+function isRightEdgeSeat(index: number, hSize: number): boolean {
+    return (index + 1) % hSize == 0;
 }

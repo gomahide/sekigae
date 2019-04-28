@@ -5019,6 +5019,7 @@ var randomLib = __importStar(require("random-seed"));
 var linq_1 = __importDefault(require("linq"));
 //  制約を考慮しつつ、学生を適当に配置する。
 function shuffle(seed, students) {
+    var vSize = entities_1.Classroom.verticalSize;
     var hSize = entities_1.Classroom.horizontalSize;
     //  指定したシード値に基づく乱数を生成する。
     //  (再現可能性がある乱数になっているハズ。)
@@ -5029,20 +5030,34 @@ function shuffle(seed, students) {
         var targetIndex = random(range);
         swap(students, i, targetIndex);
     }
-    //  前の席を希望する人を左前方の座席から順に再配置していく。 (ただし、右端は避ける。)
-    //  この操作を上のループでまとめてやってしまうと配置が偏るためループを分けた。
-    var counter = 0; //  "前の席" のインデックスを指すカウンタで、希望者を再配置すると増えていく。
-    for (var i = 0; i < range; i++) {
-        var student = students[i];
-        if (student.front) {
-            //  もし右端の席ならばカウンタを1つ進めて、右端に配置されるのを避ける。
-            var isRightEdge = (counter + 1) % hSize == 0;
-            if (isRightEdge)
-                counter++;
-            swap(students, i, counter);
-            counter++;
-        }
-    }
+    //  TODO: この実装では、前方希望者が多いときに、最前行の両端を残したまま次の行を候補に入れてしまうため、できればそれを改善する。
+    //  (https://github.com/aridai/sekigae/issues/7#issuecomment-486917080)
+    //  前方希望者とそれらが配置されうる座席のリストを作る。
+    //  希望者数には制限を掛ける。
+    var limit = vSize * (hSize - 2);
+    var frontApplicantIndices = linq_1.default.from(students)
+        .select(function (student, index) { return index; })
+        .where(function (index) { return students[index].front; })
+        .take(limit)
+        .toArray();
+    var rowCount = Math.ceil(frontApplicantIndices.length / (hSize - 2));
+    var frontSeats = linq_1.default.range(0, rowCount * hSize)
+        .where(function (i) { return !isLeftEdgeSeat(i, hSize); })
+        .where(function (i) { return !isRightEdgeSeat(i, hSize); })
+        .toArray();
+    //  希望者が既に前方にいるならば除外する。
+    frontApplicantIndices = frontApplicantIndices.filter(function (currentSeatIndex) {
+        var isAlreadyFront = frontSeats.some(function (frontSeatIndex) { return frontSeatIndex == currentSeatIndex; });
+        if (isAlreadyFront)
+            frontSeats = frontSeats.filter(function (frontSeatsIndex) { return frontSeatsIndex != currentSeatIndex; });
+        return !isAlreadyFront;
+    });
+    //  希望者を入れ替えていく。
+    frontApplicantIndices.forEach(function (currentSeatIndex) {
+        var destSeatIndex = frontSeats[random(frontSeats.length)];
+        swap(students, currentSeatIndex, destSeatIndex);
+        frontSeats = frontSeats.filter(function (frontSeatIndex) { return frontSeatIndex != destSeatIndex; });
+    });
     //  横方向サイズでワンセットになるように2次元配列に詰める。
     return linq_1.default.from(students)
         .buffer(hSize)
@@ -5052,9 +5067,22 @@ function shuffle(seed, students) {
 exports.shuffle = shuffle;
 //  配列の要素を入れ替える。
 function swap(array, index1, index2) {
-    var backupOfIndex1 = array[index1];
-    array[index1] = array[index2];
-    array[index2] = backupOfIndex1;
+    if ((0 <= index1 && index1 < array.length) && (0 <= index2 && index2 < array.length)) {
+        var backupOfIndex1 = array[index1];
+        array[index1] = array[index2];
+        array[index2] = backupOfIndex1;
+    }
+    else {
+        console.log("OutOfBoundsException: " + array.length + ", " + index1 + ", " + index2);
+    }
+}
+//  その座席が教室の左端の列にある席かどうかを判定する。
+function isLeftEdgeSeat(index, hSize) {
+    return index % hSize == 0;
+}
+//  その座席が教室の右端の列にある席かどうかを判定する。
+function isRightEdgeSeat(index, hSize) {
+    return (index + 1) % hSize == 0;
 }
 
 },{"./entities":10,"linq":2,"random-seed":7}],15:[function(require,module,exports){
