@@ -5065,7 +5065,8 @@ function shuffle(seed, students) {
         .where(function (index) { return students[index].front; })
         .take(limit)
         .toArray();
-    var rowCount = Math.ceil(frontApplicantIndices.length / (hSize - 2));
+    //  最低でも2行前方の席のを候補にする。
+    var rowCount = Math.max(2, Math.ceil(frontApplicantIndices.length / (hSize - 2)));
     var frontSeats = linq_1.default.range(0, rowCount * hSize)
         .where(function (i) { return !isLeftEdgeSeat(i, hSize); })
         .where(function (i) { return !isRightEdgeSeat(i, hSize); })
