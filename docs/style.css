@@ -8,6 +8,12 @@ table {
 }
 
 td {
+    padding: 5px 5px;
+    font-size: 1.2em;
+    background-color: #FFFFFF;
+}
+
+#table td {
     padding: 5px 20px;
     font-size: 1.5em;
     background-color: #DDDDDD;
@@ -31,4 +37,28 @@ a.material{
   
 a.material:hover{
     box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14), 0 1px 7px 0 rgba(0,0,0,0.12), 0 3px 1px -1px rgba(0,0,0,0.2);
+}
+
+.color-1-10 {
+    color: #E60012;
+}
+
+.color-11-20 {
+    color: #F39800;
+}
+
+.color-21-30 {
+    color: #009944;
+}
+
+.color-31-40 {
+    color: #00A0E9;
+}
+
+.color-41-50 {
+    color: #920783;
+}
+
+.color-error {
+    color: #000000;
 }

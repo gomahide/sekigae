@@ -24,6 +24,7 @@ function findElement(document: Document, id: string): HTMLElement {
 //  座席表のtableタグを生成する。
 function generateTable(document: Document, classroom: Classroom): HTMLTableElement {
     const tableView = document.createElement('table');
+    tableView.id = 'table';
 
     for (let v = 0; v < Classroom.verticalSize; v++) {
         const rowView = tableView.insertRow();
@@ -32,10 +33,22 @@ function generateTable(document: Document, classroom: Classroom): HTMLTableEleme
             const cellView = rowView.insertCell();
             const student = classroom.getStudent(v, h);
 
-            if (student != null)
-                cellView.innerText = student.toString();
+            if (student != null) {
+                const spanTag = `<span class="${getDisplayColor(student.num)}">${student.toString()}</span>`;
+                cellView.innerHTML = spanTag;
+            }
         }
     }
 
     return tableView;
+}
+
+//  表示色を取得する。
+function getDisplayColor(num: number): string {
+    if ( 1 <= num && num <= 10) return 'color-1-10';
+    if (11 <= num && num <= 20) return 'color-11-20';
+    if (21 <= num && num <= 30) return 'color-21-30';
+    if (31 <= num && num <= 40) return 'color-31-40';
+    if (41 <= num && num <= 50) return 'color-41-50';
+    return 'color-error';
 }

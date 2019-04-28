@@ -4925,16 +4925,33 @@ function findElement(document, id) {
 //  座席表のtableタグを生成する。
 function generateTable(document, classroom) {
     var tableView = document.createElement('table');
+    tableView.id = 'table';
     for (var v = 0; v < entities_1.Classroom.verticalSize; v++) {
         var rowView = tableView.insertRow();
         for (var h = 0; h < entities_1.Classroom.horizontalSize; h++) {
             var cellView = rowView.insertCell();
             var student = classroom.getStudent(v, h);
-            if (student != null)
-                cellView.innerText = student.toString();
+            if (student != null) {
+                var spanTag = "<span class=\"" + getDisplayColor(student.num) + "\">" + student.toString() + "</span>";
+                cellView.innerHTML = spanTag;
+            }
         }
     }
     return tableView;
+}
+//  表示色を取得する。
+function getDisplayColor(num) {
+    if (1 <= num && num <= 10)
+        return 'color-1-10';
+    if (11 <= num && num <= 20)
+        return 'color-11-20';
+    if (21 <= num && num <= 30)
+        return 'color-21-30';
+    if (31 <= num && num <= 40)
+        return 'color-31-40';
+    if (41 <= num && num <= 50)
+        return 'color-41-50';
+    return 'color-error';
 }
 
 },{"./entities":10,"./localstorage":11,"linq":2}],13:[function(require,module,exports){
