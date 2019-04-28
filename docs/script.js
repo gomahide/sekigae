@@ -4912,7 +4912,7 @@ function setup(document, seed, students, classroom) {
     var tableView = findElement(document, 'table');
     var downloadView = findElement(document, 'download');
     seedView.innerText = seed;
-    frontView.innerText = linq_1.default.from(students).where(function (s) { return s.front; }).orderBy(function (s) { return s.num; }).toArray().join(', ');
+    frontView.innerHTML = linq_1.default.from(students).where(function (s) { return s.front; }).orderBy(function (s) { return s.num; }).select(function (s) { return "<u>" + s.toString() + "</u>"; }).toArray().join(', ');
     tableView.replaceWith(generateTable(document, classroom));
     downloadView.onclick = function () { localStorage.saveCsv(document, classroom.toCsvString()); };
 }
@@ -4925,16 +4925,41 @@ function findElement(document, id) {
 //  座席表のtableタグを生成する。
 function generateTable(document, classroom) {
     var tableView = document.createElement('table');
+    tableView.id = 'table';
     for (var v = 0; v < entities_1.Classroom.verticalSize; v++) {
         var rowView = tableView.insertRow();
         for (var h = 0; h < entities_1.Classroom.horizontalSize; h++) {
             var cellView = rowView.insertCell();
             var student = classroom.getStudent(v, h);
-            if (student != null)
-                cellView.innerText = student.toString();
+            if (student != null) {
+                var span = document.createElement('span');
+                span.className = getSpanClassName(student.num);
+                if (student.front) {
+                    var underline = document.createElement('u');
+                    underline.innerText = student.toString();
+                    span.appendChild(underline);
+                }
+                else
+                    span.innerText = student.toString();
+                cellView.appendChild(span);
+            }
         }
     }
     return tableView;
+}
+//  spanタグのクラス名を取得する。
+function getSpanClassName(num) {
+    if (1 <= num && num <= 10)
+        return 'color-1-10';
+    if (11 <= num && num <= 20)
+        return 'color-11-20';
+    if (21 <= num && num <= 30)
+        return 'color-21-30';
+    if (31 <= num && num <= 40)
+        return 'color-31-40';
+    if (41 <= num && num <= 50)
+        return 'color-41-50';
+    return 'color-error';
 }
 
 },{"./entities":10,"./localstorage":11,"linq":2}],13:[function(require,module,exports){
