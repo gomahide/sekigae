@@ -30,7 +30,8 @@ export function shuffle(seed: string, students: Student[]): Student[][] {
         .take(limit)
         .toArray();
 
-    const rowCount = Math.ceil(frontApplicantIndices.length / (hSize - 2));
+    //  最低でも2行前方の席のを候補にする。
+    const rowCount = Math.max(2, Math.ceil(frontApplicantIndices.length / (hSize - 2)));
     let frontSeats = Enumerable.range(0, rowCount * hSize)
         .where(i => !isLeftEdgeSeat(i, hSize))
         .where(i => !isRightEdgeSeat(i, hSize))
