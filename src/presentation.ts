@@ -10,7 +10,7 @@ export function setup(document: Document, seed: string, students: Student[], cla
     const downloadView = findElement(document, 'download');
 
     seedView.innerText = seed;
-    frontView.innerText = Enumerable.from(students).where(s => s.front).orderBy(s => s.num).toArray().join(', ');
+    frontView.innerHTML = Enumerable.from(students).where(s => s.front).orderBy(s => s.num).select(s => `<u>${s.toString()}</u>`).toArray().join(', ');
     tableView.replaceWith(generateTable(document, classroom));
     downloadView.onclick = () => { localStorage.saveCsv(document, classroom.toCsvString()) };
 }
@@ -34,8 +34,16 @@ function generateTable(document: Document, classroom: Classroom): HTMLTableEleme
             const student = classroom.getStudent(v, h);
 
             if (student != null) {
-                const spanTag = `<span class="${getDisplayColor(student.num)}">${student.toString()}</span>`;
-                cellView.innerHTML = spanTag;
+                const span = document.createElement('span');
+                span.className = getSpanClassName(student.num);
+
+                if (student.front) {
+                    const underline = document.createElement('u');
+                    underline.innerText = student.toString();
+                    span.appendChild(underline);
+                } else span.innerText = student.toString();
+
+                cellView.appendChild(span);
             }
         }
     }
@@ -43,9 +51,9 @@ function generateTable(document: Document, classroom: Classroom): HTMLTableEleme
     return tableView;
 }
 
-//  表示色を取得する。
-function getDisplayColor(num: number): string {
-    if ( 1 <= num && num <= 10) return 'color-1-10';
+//  spanタグのクラス名を取得する。
+function getSpanClassName(num: number): string {
+    if (1 <= num && num <= 10) return 'color-1-10';
     if (11 <= num && num <= 20) return 'color-11-20';
     if (21 <= num && num <= 30) return 'color-21-30';
     if (31 <= num && num <= 40) return 'color-31-40';

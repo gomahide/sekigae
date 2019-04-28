@@ -4912,7 +4912,7 @@ function setup(document, seed, students, classroom) {
     var tableView = findElement(document, 'table');
     var downloadView = findElement(document, 'download');
     seedView.innerText = seed;
-    frontView.innerText = linq_1.default.from(students).where(function (s) { return s.front; }).orderBy(function (s) { return s.num; }).toArray().join(', ');
+    frontView.innerHTML = linq_1.default.from(students).where(function (s) { return s.front; }).orderBy(function (s) { return s.num; }).select(function (s) { return "<u>" + s.toString() + "</u>"; }).toArray().join(', ');
     tableView.replaceWith(generateTable(document, classroom));
     downloadView.onclick = function () { localStorage.saveCsv(document, classroom.toCsvString()); };
 }
@@ -4932,15 +4932,23 @@ function generateTable(document, classroom) {
             var cellView = rowView.insertCell();
             var student = classroom.getStudent(v, h);
             if (student != null) {
-                var spanTag = "<span class=\"" + getDisplayColor(student.num) + "\">" + student.toString() + "</span>";
-                cellView.innerHTML = spanTag;
+                var span = document.createElement('span');
+                span.className = getSpanClassName(student.num);
+                if (student.front) {
+                    var underline = document.createElement('u');
+                    underline.innerText = student.toString();
+                    span.appendChild(underline);
+                }
+                else
+                    span.innerText = student.toString();
+                cellView.appendChild(span);
             }
         }
     }
     return tableView;
 }
-//  表示色を取得する。
-function getDisplayColor(num) {
+//  spanタグのクラス名を取得する。
+function getSpanClassName(num) {
     if (1 <= num && num <= 10)
         return 'color-1-10';
     if (11 <= num && num <= 20)
