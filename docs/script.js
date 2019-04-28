@@ -5125,7 +5125,7 @@ var urlLib = __importStar(require("url"));
 var entities_1 = require("./entities");
 var queries_1 = require("./queries");
 var presentation = __importStar(require("./presentation"));
-window.onload = function () {
+window.addEventListener('load', function () {
     //  URLのクエリをパースし、シード値と前方の席の希望者を取得する。
     var queryMap = urlLib.parse(location.href, true).query;
     var seed = queries_1.getSeedValue(queryMap);
@@ -5134,6 +5134,6 @@ window.onload = function () {
     var classroom = entities_1.Classroom.generate(seed, students);
     //  DOMに反映させる。
     presentation.setup(document, seed, students, classroom);
-};
+});
 
 },{"./entities":10,"./presentation":12,"./queries":13,"url":8}]},{},[15]);
