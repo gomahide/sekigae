@@ -4930,19 +4930,8 @@ function generateTable(document, classroom) {
         for (var h = 0; h < entities_1.Classroom.horizontalSize; h++) {
             var cellView = rowView.insertCell();
             var student = classroom.getStudent(v, h);
-            /*
             if (student != null)
                 cellView.innerText = student.toString();
-            */
-            //  デバッグ用に前方希望者は赤色で表示させる。
-            if (student != null) {
-                if (student.front) {
-                    cellView.innerHTML = "<span style=\"color: red;\">" + student.toString() + "</span>";
-                }
-                else {
-                    cellView.innerText = student.toString();
-                }
-            }
         }
     }
     return tableView;
@@ -5044,14 +5033,17 @@ function shuffle(seed, students) {
     //  TODO: この実装では、前方希望者が多いときに、最前行の両端を残したまま次の行を候補に入れてしまうため、できればそれを改善する。
     //  (https://github.com/aridai/sekigae/issues/7#issuecomment-486917080)
     //  前方希望者とそれらが配置されうる座席のリストを作る。
+    //  希望者数には制限を掛ける。
+    var limit = vSize * (hSize - 2);
     var frontApplicantIndices = linq_1.default.from(students)
         .select(function (student, index) { return index; })
         .where(function (index) { return students[index].front; })
+        .take(limit)
         .toArray();
-    var frontSeats = linq_1.default.range(0, vSize * hSize)
+    var rowCount = Math.ceil(frontApplicantIndices.length / (hSize - 2));
+    var frontSeats = linq_1.default.range(0, rowCount * hSize)
         .where(function (i) { return !isLeftEdgeSeat(i, hSize); })
         .where(function (i) { return !isRightEdgeSeat(i, hSize); })
-        .take(frontApplicantIndices.length)
         .toArray();
     //  希望者が既に前方にいるならば除外する。
     frontApplicantIndices = frontApplicantIndices.filter(function (currentSeatIndex) {

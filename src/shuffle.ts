@@ -22,15 +22,18 @@ export function shuffle(seed: string, students: Student[]): Student[][] {
     //  (https://github.com/aridai/sekigae/issues/7#issuecomment-486917080)
 
     //  前方希望者とそれらが配置されうる座席のリストを作る。
+    //  希望者数には制限を掛ける。
+    const limit = vSize * (hSize - 2);
     let frontApplicantIndices = Enumerable.from(students)
         .select((student, index) => index)
         .where(index => students[index].front)
+        .take(limit)
         .toArray();
 
-    let frontSeats = Enumerable.range(0, vSize * hSize)
+    const rowCount = Math.ceil(frontApplicantIndices.length / (hSize - 2));
+    let frontSeats = Enumerable.range(0, rowCount * hSize)
         .where(i => !isLeftEdgeSeat(i, hSize))
         .where(i => !isRightEdgeSeat(i, hSize))
-        .take(frontApplicantIndices.length)
         .toArray();
 
     //  希望者が既に前方にいるならば除外する。
