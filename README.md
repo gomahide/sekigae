@@ -32,7 +32,8 @@ https://github.com/aridai/sekigae
 
 ## ライセンス
 MITライセンスです。  
-詳しくは [こちら](https://github.com/aridai/sekigae/blob/master/LICENSE) を参照してください。
+詳しくは [こちら](https://github.com/aridai/sekigae/blob/master/LICENSE) を参照してください。  
+使用ライブラリとそのライセンスについては [こちら](https://github.com/aridai/sekigae/blob/master/LIBRARIES) を参照してください。
 
 また、アイコンは [いらすとや](https://www.irasutoya.com/2017/06/blog-post_371.html) から借りてきています。  
 感謝いたします。
